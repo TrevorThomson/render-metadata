@@ -15,5 +15,5 @@ class TestRenderer(unittest.TestCase):
     def test_render(self):
         renderer = Renderer()
         result = renderer.render(self.shot)
-        self.assertEqual(result[101]['status'], 'complete')
+        self.assertEqual(result[101]['status'], 'queued')
 

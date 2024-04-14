@@ -27,8 +27,7 @@ class Renderer:
     # private methods
     def _renderFrame(self, frame) -> dict:
         result = {
-            'status': 'complete',
-            'time': '300'
+            'status': 'queued'
         }
         return result
 
