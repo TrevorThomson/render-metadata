@@ -13,19 +13,11 @@ from render.model.shot import Shot
 
 class Renderer:
     # constructors
-    @classmethod
-    def fromMetadataFile(cls, file: typing.IO[str]) -> 'Renderer':
-        instance = cls()
-        instance._metadata_file = file
-        return instance
-
     def __init__(self) -> None:
-        self._metadata_file = None
+        pass
 
     # public methods
     def render(self, shot: Shot) -> dict:
-        if not self._metadata_file:
-            raise AttributeError('Renderer: metadata file undefined')
         result = {}
         for frame in shot.frames():
             frameresult = self._renderFrame(frame)

@@ -1,5 +1,4 @@
 
-import json
 import unittest
 
 from render.model.frame import Frame

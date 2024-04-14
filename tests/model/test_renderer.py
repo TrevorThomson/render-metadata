@@ -1,6 +1,4 @@
 
-import io
-import json
 import unittest
 
 from render.model.shot import Shot
@@ -11,13 +9,11 @@ class TestRenderer(unittest.TestCase):
         self.shot = Shot.fromFrameRange('myshot', 101, 110)
 
     def test_construct(self):
-        ioObj = io.StringIO()
-        renderer = Renderer.fromMetadataFile(ioObj)
+        renderer = Renderer()
         self.assertTrue(True)
     
     def test_render(self):
-        ioObj = io.StringIO()
-        renderer = Renderer.fromMetadataFile(ioObj)
+        renderer = Renderer()
         result = renderer.render(self.shot)
         self.assertEqual(result[101]['status'], 'complete')
 
