@@ -2,7 +2,7 @@
 import json
 import unittest
 
-from renderer.model.frame import Frame
+from render.model.frame import Frame
 
 class TestFrame(unittest.TestCase):
 

@@ -1,7 +1,7 @@
 
 import unittest
 
-from renderer.model.shot import Shot
+from render.model.shot import Shot
 
 class TestShot(unittest.TestCase):
 

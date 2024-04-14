@@ -9,7 +9,7 @@ renderer.render(shot)
 
 import typing
 
-from renderer.model.shot import Shot
+from render.model.shot import Shot
 
 class Renderer:
     # constructors

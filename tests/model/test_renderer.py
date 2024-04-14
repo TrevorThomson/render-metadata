@@ -3,8 +3,8 @@ import io
 import json
 import unittest
 
-from renderer.model.shot import Shot
-from renderer.model.renderer import Renderer
+from render.model.shot import Shot
+from render.model.renderer import Renderer
 
 class TestRenderer(unittest.TestCase):
     def setUp(self) -> None:

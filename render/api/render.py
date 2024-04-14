@@ -9,8 +9,8 @@ import io
 from flask import Blueprint
 from flask import jsonify
 
-from renderer.model.renderer import Renderer
-from renderer.model.shot import Shot
+from render.model.renderer import Renderer
+from render.model.shot import Shot
 
 api = Blueprint('fibo_api', __name__)
 

@@ -2,7 +2,7 @@
 import unittest
 
 # testing how gunicorn will import the service
-from renderer import create_service
+from render import create_service
 
 class TestRender(unittest.TestCase):
     def setUp(self) -> None:
