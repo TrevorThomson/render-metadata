@@ -8,18 +8,11 @@ services:
         APPNAME: render
     networks:
       - render-network
-
-  database:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        APPNAME: database
-    networks:
-      - render-network
   
   cassandra:
     image: cassandra:4.1
+    networks:
+      - render-network
 
 networks:
   render-network:
