@@ -22,4 +22,5 @@ def render():
     shot = Shot.fromFrameRange(shotName, startFrame, endFrame)
     renderer = Renderer()
     result = renderer.render(shot)
+
     return jsonify(result), 200

@@ -20,12 +20,12 @@ class Renderer:
     def render(self, shot: Shot) -> dict:
         result = {}
         for frame in shot.frames():
-            frameresult = self._renderFrame(frame)
+            frameresult = self._queueFrame(frame)
             result[frame.number] = frameresult
         return result
     
     # private methods
-    def _renderFrame(self, frame) -> dict:
+    def _queueFrame(self, frame) -> dict:
         result = {
             'status': 'queued'
         }

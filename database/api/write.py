@@ -4,16 +4,15 @@ Usage:
     <url>/write/<data>
 '''
 
-from flask import Blueprint
-from flask import make_response
+import flask
 
 from database.model.cassandra import Cassandra
 
-api = Blueprint('write_api', __name__)
+api = flask.Blueprint('write_api', __name__)
 
-@api.get('/write/<data>')
+@api.put('/write/<data>')
 def write(data):
-    db = Cassandra('127.0.0.1', 9042)
+    db = flask.session.get('db')
     db.write(data)
-    response = make_response('', 200)
-    return response
+
+    return flask.make_response('', 200)
