@@ -20,8 +20,9 @@ API
 Model
 - Renderer
 - Shot
+    - show id
     - shot id
-    - list of frames
+    - frame range
 - Frame
     - frame number
     - render status

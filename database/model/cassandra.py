@@ -8,18 +8,28 @@ class Cassandra:
     '''
     Class to communicate with a Cassandra cluster
     '''
+
     def __init__(self, ipAddresses: list) -> None:
-        # self._cluster = Cluster(ipAddresses)
-        # self._session = None
-        pass
+        self._cluster = Cluster(ipAddresses)
+        self._session = None
+
+    @property
+    def hasSession(self) -> bool:
+        return self._session != None
 
     def openSession(self) -> None:
         '''
         open a session independly of the write method to ensure
         we're not thrashing (opening too many short-lived sessions)
         '''
-        # self._session = self._cluster.connect()
-        pass
+        if self._session:
+            raise Exception('Session already created!')
+        self._session = self._cluster.connect()
+    
+    def closeSession(self) -> None:
+        if self._session:
+            self._session.shutdown()
+            self._session = None
 
     def write(self, keyspace: str, data: dict) -> None:
         print(f'keyspace: {keyspace}')
