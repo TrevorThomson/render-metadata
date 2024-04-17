@@ -9,7 +9,7 @@ shot.setFrameRange(startFrame, endFrame)
 
 from render.model.frame import Frame
 
-class Shot:
+class Shot(dict):
     # constructors
 
     @classmethod
@@ -20,35 +20,28 @@ class Shot:
 
     def __init__(self, showName: str, shotName: str) -> None:
         # store as a map for easy translation to json
-        self._map = {
-            'name': shotName,
-            'showName': showName,
-            'startFrame': None,
-            'endFrame': None
-        }
+        super().__init__()
+        self['name'] = shotName
+        self['showname'] = showName
 
     # properties
 
     @property
     def name(self):
-        return self._map['name']
+        return self['name']
     
     @property
     def showName(self):
-        return self._map['showName']
+        return self['showname']
 
     @property
     def startFrame(self):
-        return self._map['startFrame']
+        return self['startframe']
     
     @property
     def endFrame(self):
-        return self._map['endFrame']
+        return self['endframe']
     
-    @property
-    def map(self):
-        return self._map
-
     # public methods
 
     def frames(self):
@@ -57,6 +50,6 @@ class Shot:
             yield Frame(f)
     
     def setFrameRange(self, startFrame, endFrame):
-        self._map['startFrame'] = startFrame
-        self._map['endFrame'] = endFrame
+        self['startframe'] = startFrame
+        self['endframe'] = endFrame
 

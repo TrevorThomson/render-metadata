@@ -31,13 +31,14 @@ class Cassandra:
             self._session.shutdown()
             self._session = None
 
-    def write(self, keyspace: str, data: dict) -> None:
-        print(f'keyspace: {keyspace}')
-        print(f'data: {data}')
-        # self._session.execute(f'''
-        #     CREATE KEYSPACE IF NOT EXISTS {keyspace} 
-        #     WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': '1'}};
-        # ''')
+    def write(self, keyspace: str, data: dict) -> bool:
+        result = self._session.execute(
+            trace=True,
+            query=f'''
+                CREATE KEYSPACE IF NOT EXISTS {keyspace} 
+                WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': '1'}};
+            ''')
+
         # self._session.execute(f'''
         #     CREATE TABLE IF NOT EXISTS {keyspace}.frames (
         #         id UUID PRIMARY KEY,
@@ -49,3 +50,12 @@ class Cassandra:
         #     );
         # ''')
 
+        return bool(result)
+
+    def system_local(self) -> str:
+        result = self._session.execute(
+            '''
+            SELECT * FROM system.local;
+            '''
+        )
+        return bool(result)

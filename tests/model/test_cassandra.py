@@ -5,15 +5,26 @@ from database.model.cassandra import Cassandra
 
 class TestCassandra(unittest.TestCase):
 
-    def test_construct(self):
-        db = Cassandra(['127.0.0.1',])
+    def test_connect(self):
+        db = Cassandra(['localhost'])
+        db.openSession()
+        db.closeSession()
         self.assertTrue(True)
     
+    def test_system_local(self):
+        db = Cassandra(['localhost'])
+        db.openSession()
+        result = db.system_local()
+        db.closeSession()
+        self.assertTrue(result)
+
     def test_write(self):
-        db = Cassandra({'127.0.0.1',})
+        db = Cassandra(['localhost'])
+        db.openSession()
         data = {
             'test': 'testing'
         }
         db.write(keyspace='rendering',data=data)
+        db.closeSession()
         self.assertTrue(True)
 

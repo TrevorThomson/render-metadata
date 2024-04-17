@@ -11,20 +11,22 @@ api = flask.Blueprint('shot_api', __name__)
 
 @api.post('/shot')
 def postShot():
-    data = flask.request.json
-
+    data = flask.json.loads(flask.request.json)
     showName = data.get('showname')
-    shotName = data.get('shotname')
-    startFrame = data.get('startframe')
-    endFrame = data.get('endframe')
 
-    shot = Shot.withFrameRange(showName, shotName, startFrame, endFrame)
+    # # debugging
+    # shotName = data.get('name')
+    # startFrame = data.get('startframe')
+    # endFrame = data.get('endframe')
+    # shot = Shot.withFrameRange(showName, shotName, startFrame, endFrame)
+    # print(f'posted shot: {shot}')
+    # # end debugging
 
     flask.current_app.db.openSession()
-    jsonshot = flask.json.dumps(shot.map)
-    response = flask.current_app.db.write(keyspace=showName, data=jsonshot)
+    result = flask.current_app.db.write(keyspace=showName, data=flask.request.json)
     flask.current_app.db.closeSession()
 
+    response = flask.make_response('', 200)
     return response
 
 @api.get('/show/<showname>/shot/<shotname>')
