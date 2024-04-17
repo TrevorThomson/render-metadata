@@ -9,40 +9,47 @@ shot.setFrameRange(startFrame, endFrame)
 
 from render.model.frame import Frame
 
-class Shot:
+class Shot(dict):
     # constructors
+
     @classmethod
-    def fromFrameRange(cls, name: str, startFrame: int, endFrame: int) -> 'Shot':
-        instance = cls(name)
+    def withFrameRange(cls, showName: str, shotName: str, startFrame: int, endFrame: int) -> 'Shot':
+        instance = cls(showName=showName, shotName=shotName)
         instance.setFrameRange(startFrame=startFrame, endFrame=endFrame)
         return instance
 
-    def __init__(self, name: str) -> None:
-        self._name = name
-        self._startFrame = None
-        self._endFrame = None
+    def __init__(self, showName: str, shotName: str) -> None:
+        # store as a map for easy translation to json
+        super().__init__()
+        self['name'] = shotName
+        self['showname'] = showName
 
     # properties
+
     @property
     def name(self):
-        return self._name
+        return self['name']
+    
+    @property
+    def showName(self):
+        return self['showname']
 
     @property
     def startFrame(self):
-        return self._startFrame
+        return self['startframe']
     
     @property
     def endFrame(self):
-        return self._endFrame
-
-    # generator method
-    def frames(self):
-        # yielf frames from startFrame to endFrame, inclusively
-        for f in range(self._startFrame, self._endFrame + 1):
-            yield Frame(f)
+        return self['endframe']
     
     # public methods
+
+    def frames(self):
+        # yielf frames from startFrame to endFrame, inclusively
+        for f in range(self.startFrame, self.endFrame + 1):
+            yield Frame(f)
+    
     def setFrameRange(self, startFrame, endFrame):
-        self._startFrame = startFrame
-        self._endFrame = endFrame
+        self['startframe'] = startFrame
+        self['endframe'] = endFrame
 

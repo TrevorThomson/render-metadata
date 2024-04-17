@@ -15,11 +15,13 @@ api = Blueprint('render_api', __name__)
 def render():
     data = request.json
 
+    showName = data.get('showname')
     shotName = data.get('shotname')
     startFrame = data.get('startframe')
     endFrame = data.get('endframe')
 
-    shot = Shot.fromFrameRange(shotName, startFrame, endFrame)
+    shot = Shot.withFrameRange(showName, shotName, startFrame, endFrame)
     renderer = Renderer()
     result = renderer.render(shot)
+
     return jsonify(result), 200

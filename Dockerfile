@@ -1,5 +1,8 @@
 
-FROM python:3.12-alpine
+## python 3.12+ removes support for asyncore which is used by cassandra
+## as of this writing, apk installing libev for events in python 3.12 doesn't seem
+## to work -- cassandra-driver still complains that it can't find libev
+FROM python:3.11-alpine
 
 ARG APPNAME
 
