@@ -2,7 +2,16 @@
 Toy wrapper around an Apache Cassandra database
 '''
 
+# import cassandra
+import time
+
 from cassandra.cluster import Cluster
+
+import logging
+logger = logging.getLogger(__name__)
+cassandra_logger = logging.getLogger('cassandra')
+# block logger messages from cassandra module
+cassandra_logger.setLevel(logging.CRITICAL + 10)
 
 class Cassandra:
     '''
@@ -12,6 +21,24 @@ class Cassandra:
     def __init__(self, ipAddresses: list) -> None:
         self._cluster = Cluster(ipAddresses)
         self._session = None
+    
+    @classmethod
+    def waitFor(cls, ipAddresses: list, timeout: int):
+        startTime = time.time()
+        while True:
+            try:
+                logger.info(f'Waiting for cluster at {ipAddresses}...')
+                cluster = Cluster(ipAddresses)
+                session = cluster.connect()
+                session.execute('SELECT release_version FROM system.local')
+                session.shutdown
+                logger.info(f'Cluster available.')
+                return True
+            except:
+                if time.time() - startTime >= timeout:
+                    raise TimeoutError(f'Cluster unavailable.')
+                else:
+                    time.sleep(2)
 
     @property
     def hasSession(self) -> bool:
@@ -33,22 +60,20 @@ class Cassandra:
 
     def write(self, keyspace: str, data: dict) -> bool:
         result = self._session.execute(
-            trace=True,
             query=f'''
                 CREATE KEYSPACE IF NOT EXISTS {keyspace} 
                 WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': '1'}};
             ''')
-
-        # self._session.execute(f'''
-        #     CREATE TABLE IF NOT EXISTS {keyspace}.frames (
-        #         id UUID PRIMARY KEY,
-        #         frame_name TEXT,
-        #         frame_width INT,
-        #         frame_height INT,
-        #         frame_format TEXT,
-        #         frame_size_in_bytes INT
-        #     );
-        # ''')
+        result = self._session.execute(
+            query=f'''
+                CREATE TABLE IF NOT EXISTS {keyspace}.shots (
+                    id UUID PRIMARY KEY,
+                    name TEXT,
+                    showname INT,
+                    startframe INT,
+                    endframe INT
+                );
+        ''')
 
         return bool(result)
 
