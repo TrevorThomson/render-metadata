@@ -20,7 +20,7 @@ def create_service(cassandraAddrs):
     # create and configure the app
     service = flask.Flask(__name__)
 
-    Cassandra.waitFor(cassandraAddrs, timeout=60)
+    Cassandra.waitFor(cassandraAddrs, timeout=120)
 
     service.db = Cassandra(cassandraAddrs)
 
