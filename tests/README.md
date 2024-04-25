@@ -4,7 +4,7 @@ Python unittest module
 
 Running locally
 ---------------
-To run the api tests locally, a local cassandra ports must be exposed in the local host.
+To run the api tests locally, a local cassandra port must be exposed in the local host.
 With docker:
 - See: https://hub.docker.com/_/cassandra
 - docker run --detach --name cassandra-1 -p 7000:7000 -p 9042:9042 cassandra:4.1
