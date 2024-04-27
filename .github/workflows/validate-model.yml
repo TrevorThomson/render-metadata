@@ -1,0 +1,53 @@
+
+# Validate the Renderer Metadata model
+name: Validate Model
+
+on:
+    push:
+        branches: main
+    pull_request:
+        branches: main
+    workflow_dispatch:
+
+permissions: read-all
+
+concurrency:
+    group: '${{ github.workflow }}-${{ github.ref }}'
+    cancel-in-progress: true
+
+jobs:
+    validate-docker-compose:
+        runs-on: ubuntu-latest
+        steps:            
+            - name: Verify Docker Engine installation
+              run: |
+                docker run hello-world
+
+            - uses: actions/checkout@v4
+
+            - name: Build Docker images
+              run: |
+                docker compose build
+            
+            - name: Spin up Docker network
+              run: |
+                docker compose up --detach
+                $GITHUB_WORKSPACE/.github/scripts/wait-cassandra.sh render
+            
+            - name: Run unit tests
+              run: |
+                curl -X POST -H "Content-Type: application/json" \
+                    -d '{"name": "myshot", "showname": "myshow", "startframe": 101, "endframe": 110}' \
+                    http://localhost:8080/shot
+
+            - name: Shut down Docker network
+              if: ${{ always() }}
+              run: |
+                docker compose down
+
+
+
+            
+            
+
+

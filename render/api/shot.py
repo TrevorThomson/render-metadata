@@ -7,32 +7,32 @@ import flask
 from database.model.cassandra import Cassandra
 from render.model.shot import Shot
 
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 api = flask.Blueprint('shot_api', __name__)
 
 @api.post('/shot')
 def postShot():
-    data = flask.json.loads(flask.request.json)
-    showName = data.get('showname')
+    logger.debug(f'request content type: {flask.request.content_type}')
+    logger.debug(f'request python type: {type(flask.request.json)}')
+    logger.debug(f'request.json: {flask.request.json}')
 
-    # # debugging
-    # shotName = data.get('name')
-    # startFrame = data.get('startframe')
-    # endFrame = data.get('endframe')
-    # shot = Shot.withFrameRange(showName, shotName, startFrame, endFrame)
-    # print(f'posted shot: {shot}')
-    # # end debugging
+    data = flask.request.json
+    showname = data.get('showname')
 
     flask.current_app.db.openSession()
-    result = flask.current_app.db.write(keyspace=showName, data=flask.request.json)
+    result = flask.current_app.db.write(keyspace=showname, data=flask.request.json)
     flask.current_app.db.closeSession()
 
     response = flask.make_response('', 200)
     return response
 
-@api.get('/show/<showname>/shot/<shotname>')
+@api.get('/shot/<shotname>/show/<showname>')
 def getShot(showname, shotname):
     flask.current_app.db.openSession()
-    response = flask.current_app.db.read(keyspace=showname, table='shows', key=shotname)
+    response = flask.current_app.db.read(keyspace=showname, table='shots', key=shotname)
     flask.current_app.db.closeSession()
 
     return response

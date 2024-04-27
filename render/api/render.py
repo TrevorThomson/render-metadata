@@ -9,6 +9,9 @@ from flask import request
 from render.model.renderer import Renderer
 from render.model.shot import Shot
 
+import logging
+logger = logging.getLogger(__name__)
+
 api = Blueprint('render_api', __name__)
 
 @api.post('/render')

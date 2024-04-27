@@ -13,11 +13,16 @@ import render.api.shot
 
 from database.model.cassandra import Cassandra
 
-def create_service(ipAddresses):
+import logging
+logging.basicConfig(level=logging.INFO)
+
+def create_service(cassandraAddrs):
     # create and configure the app
     service = flask.Flask(__name__)
 
-    service.db = Cassandra(ipAddresses)
+    Cassandra.waitFor(cassandraAddrs, timeout=120)
+
+    service.db = Cassandra(cassandraAddrs)
 
     # register the api endpoints
     service.register_blueprint(render.api.render.api)
