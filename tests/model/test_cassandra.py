@@ -24,7 +24,7 @@ class TestCassandra(unittest.TestCase):
         data = {
             'test': 'testing'
         }
-        db.write(keyspace='rendering',data=data)
+        db.writeShot(keyspace='rendering',shot=data)
         db.closeSession()
         self.assertTrue(True)
 

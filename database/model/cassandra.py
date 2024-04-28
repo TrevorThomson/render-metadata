@@ -6,6 +6,7 @@ Toy wrapper around an Apache Cassandra database
 import time
 
 from cassandra.cluster import Cluster
+from cassandra import RequestExecutionException
 
 import logging
 logger = logging.getLogger(__name__)
@@ -16,6 +17,11 @@ cassandra_logger.setLevel(logging.CRITICAL + 10)
 class Cassandra:
     '''
     Class to communicate with a Cassandra cluster
+    Data model (WIP):
+    - keyspace : show name
+    - tables:
+        - shots: primary key is shot name -- unique per show for this simple example
+        - frames: primary key (shot, frame)
     '''
 
     def __init__(self, ipAddresses: list) -> None:
@@ -58,24 +64,26 @@ class Cassandra:
             self._session.shutdown()
             self._session = None
 
-    def write(self, keyspace: str, data: dict) -> bool:
-        result = self._session.execute(
-            query=f'''
-                CREATE KEYSPACE IF NOT EXISTS {keyspace} 
-                WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': '1'}};
+    def writeShot(self, keyspace: str, shot: dict) -> bool:
+        try:
+            self._session.execute(
+                query=f'''
+                    CREATE KEYSPACE IF NOT EXISTS {keyspace} 
+                    WITH replication = {{'class': 'SimpleStrategy', 'replication_factor': '1'}};
+                ''')
+            self._session.execute(
+                query=f'''
+                    CREATE TABLE IF NOT EXISTS {keyspace}.shots (
+                        name TEXT,
+                        startframe INT,
+                        endframe INT,
+                        PRIMARY KEY (name)
+                    );
             ''')
-        result = self._session.execute(
-            query=f'''
-                CREATE TABLE IF NOT EXISTS {keyspace}.shots (
-                    id UUID PRIMARY KEY,
-                    name TEXT,
-                    showname INT,
-                    startframe INT,
-                    endframe INT
-                );
-        ''')
-
-        return bool(result)
+        except RequestExecutionException as e:
+            # re-raise error for now
+            # todo: design error handling
+            raise 
 
     def system_local(self) -> str:
         result = self._session.execute(
